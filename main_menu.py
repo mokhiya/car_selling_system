@@ -1,21 +1,83 @@
 from superadmin.database import (create_database,
                                  add_update_or_delete_manager, see_all_managers,
                                  total_sales, total_revenue, sales_per_branch, sales_per_seller)
+from seller.seller import (view_available_cars, view_sales_history, sell_car_to_client, process_payment)
+from client.client import (view_available_cars, view_purchase_history, buy_car)
+from client.registerclient import register_client
+from configs.db_settings import execute_query
+
+
+def check_login(login, password):
+    super_admin_login = "super"
+    super_admin_password = "super"
+
+    if login == super_admin_login and password == super_admin_password:
+        print("Login successful")
+        return show_super_admin_menu()
+
+    employee_query = """
+    SELECT e.user_type, u.name, e.is_active
+    FROM employees e
+    JOIN user_type u ON e.user_type = u.id
+    WHERE e.login = %s AND e.password = %s;
+    """
+
+    employee = execute_query(employee_query, params=(login, password), fetch="one")
+
+    if employee:
+        user_type, user_role, is_active = employee
+
+        if not is_active:
+            update_query = "UPDATE employees SET is_active = TRUE WHERE login = %s;"
+            execute_query(update_query, params=(login,))
+            print(f"{user_role} login successful and status updated.")
+
+        if user_role == 'Manager':
+            return branch_manager_menu()
+        elif user_role == 'Seller':
+            return seller_menu()
+        else:
+            print("Unknown user type.")
+            return
+
+    client_query = """
+    SELECT is_active
+    FROM customers
+    WHERE login = %s AND password = %s;
+    """
+
+    client = execute_query(client_query, params=(login, password), fetch="one")
+
+    if client:
+        is_active = client[0]
+
+        if not is_active:
+            update_query = "UPDATE customers SET is_active = TRUE WHERE login = %s;"
+            execute_query(update_query, params=(login,))
+            print("Client login successful and status updated.")
+
+        return client_query
+
+    print("Invalid login or password. Please try again.")
 
 
 def main_menu():
     while True:
         print("\nMain Menu:")
-        print("1. Register")
+        print("1. Register (for new clients only)")
         print("2. Login")
         print("3. Exit")
         choice = input("Select an option: ")
 
         if choice == "1":
-            pass
+            login = input("Login: ")
+            password = input("Password: ")
+            check_login(login, password)
         elif choice == "2":
-            pass
+            if register_client():
+                return client_menu()
         elif choice == "3":
+            print("Thank you using for our service!")
             break
         else:
             print("Invalid choice, please try again.")
@@ -40,9 +102,10 @@ def show_super_admin_menu():
         if show_manger_management_menu():
             return show_super_admin_menu()
     elif text == "3":
-        pass
+        if show_statistics_menu():
+            return show_super_admin_menu()
     elif text == "4":
-        pass
+        return main_menu()
     else:
         print("Invalid input")
         show_super_admin_menu()
@@ -86,13 +149,17 @@ def show_statistics_menu():
     Choose an option above: """)
 
     if text == "1":
-        total_sales()
+        if total_sales():
+            return show_statistics_menu()
     elif text == "2":
-        total_revenue()
+        if total_revenue():
+            return show_statistics_menu()
     elif text == "3":
-        sales_per_branch()
+        if sales_per_branch():
+            return show_statistics_menu()
     elif text == "4":
-        sales_per_seller()
+        if sales_per_seller():
+            return show_statistics_menu()
     elif text == "5":
         return show_super_admin_menu()
     else:
@@ -116,7 +183,7 @@ def branch_manager_menu():
         elif choice == "2":
             manage_cars_menu()
         elif choice == "3":
-            break
+            return main_menu()
         else:
             print("Invalid choice, please try again.")
 
@@ -173,49 +240,89 @@ def manage_cars_menu():
             break
         else:
             print("Invalid choice, please try again.")
-            
 
-def sell_car():
+
+def seller_menu(branch_id):
+    while True:
+        print("\nSeller Menu:")
+        print("1. Sell a Car")
+        print("2. View Sales History")
+        print("3. View Available Cars")
+        print("4. Exit")
+        
+        choice = input("Enter your choice: ")
+        
+        if choice == '1':
+            sell_car_menu(branch_id)
+        elif choice == '2':
+            view_sales_history(branch_id)
+        elif choice == '3':
+            view_available_cars(branch_id)
+        elif choice == '4':
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+def sell_car_menu(branch_id):
     """
-    This function shows the main menu of the sellers menu.
+    Main menu for selling a car and processing payment.
     """
     while True:
         print("\nSell a Car:")
         print("1. Sell a car to a client")
-        print("2. Choose payment method (full or credit)")
-        print("3. Back to Seller Menu")
+        print("2. Back to Seller Menu")
         choice = input("Select an option: ")
 
         if choice == "1":
-            pass
+            selected_car = sell_car_to_client(branch_id)
+            if selected_car:
+                process_payment(selected_car, branch_id)
+                choice= input("Choose payment method (full or credit):")
         elif choice == "2":
-            pass
-        elif choice == "3":
-            break
+            seller_menu()
         else:
             print("Invalid choice, please try again.")
-            
+
+        
+def client_menu():
+    """
+    This function shows the main menu of the client menu.
+    """
+    while True:
+        print("\nClient Menu:")
+        print("1. Buy a Car")
+        print("2. View Purchase History")
+        print("3. Back to Main Menu")
+        choice = input("Select an option: ")
+
+        if choice == "1":
+            buy_car_menu()
+        elif choice == "2":
+            view_purchase_history()
+        elif choice == "3":
+            main_menu()
+        else:
+            print("Invalid choice, please try again.")
 
 def buy_car_menu():
     """
-    This function shows the main menu of the sellers menu.
+    This function shows the main menu for buying a car.
     """
     while True:
         print("\nBuy a Car:")
         print("1. View available cars")
-        print("2. Purchase a car (full or credit)")
-        print("3. Back to Client Menu")
+        print("2. Buy car")
+        print("3. Back to Main Menu")
         choice = input("Select an option: ")
 
         if choice == "1":
-            pass
+            view_available_cars()
         elif choice == "2":
-            pass
+            buy_car()
         elif choice == "3":
-            break
+            main_menu()
         else:
             print("Invalid choice, please try again.")
 
-
-if __name__ == "__main__":
-    main_menu()
+if __name__ == '__main__':
+    main_menu
