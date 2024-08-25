@@ -183,11 +183,7 @@ def branch_manager_menu():
         elif choice == "2":
             manage_cars_menu()
         elif choice == "3":
-<<<<<<< HEAD
             return main_menu()
-=======
-            main_menu()
->>>>>>> 45c6bcb890936397e64423e16e074b881b824f9e
         else:
             print("Invalid choice, please try again.")
 
