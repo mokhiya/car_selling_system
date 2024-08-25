@@ -7,6 +7,7 @@ from client.registerclient import register_client
 from configs.db_settings import execute_query
 from manager.manage_sellers import (create_seller_account, update_seller_account,
                                     delete_seller_account, view_all_sellers_in_branch)
+from manager.manage_cars import add_new_car, update_car_details, delete_car, view_available_cars_in_branch
 
 
 def check_login(login, password):
@@ -231,15 +232,15 @@ def manage_cars_menu():
         choice = input("Select an option: ")
 
         if choice == "1":
-            pass
+            add_new_car()
         elif choice == "2":
-            pass
+            update_car_details()
         elif choice == "3":
-            pass
+            delete_car()
         elif choice == "4":
-            pass
+            view_available_cars_in_branch()
         elif choice == "5":
-            break
+            branch_manager_menu()
         else:
             print("Invalid choice, please try again.")
 
