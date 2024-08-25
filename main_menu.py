@@ -1,8 +1,8 @@
 from superadmin.database import (create_database,
                                  add_update_or_delete_manager, see_all_managers,
                                  total_sales, total_revenue, sales_per_branch, sales_per_seller)
-from client.client import (view_available_cars, buy_car, view_purchase_history)
-from seller.seller import (sell_car, view_sales_history, view_available_cars)
+from client.client import (view_available_cars, buy_car_menu, view_purchase_history)
+from seller.seller import (sell_car_menu, view_sales_history, view_available_cars)
 
 def main_menu():
     while True:
@@ -187,7 +187,7 @@ def seller_menu(branch_id):
         choice = input("Enter your choice: ")
         
         if choice == '1':
-            sell_car(branch_id)
+            sell_car_menu(branch_id)
         elif choice == '2':
             view_sales_history(branch_id)
         elif choice == '3':
@@ -209,7 +209,7 @@ def client_menu():
         if choice == '1':
             view_available_cars()
         elif choice == '2':
-            buy_car()
+            buy_car_menu()
         elif choice == '3':
             view_purchase_history()
         elif choice == '4':
