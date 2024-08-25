@@ -152,3 +152,51 @@ def see_all_managers():
 
     except Exception as e:
         print(f"An error occurred: {e}")
+
+
+def total_sales():
+    query = "SELECT COUNT(*) FROM sales;"
+    total = execute_query(query, fetch="one")
+    print(f"Total sales: {total[0]}")
+
+
+def total_revenue():
+    query = "SELECT SUM(amount) FROM sales;"
+    revenue = execute_query(query, fetch="one")
+    print(f"Total revenue: ${revenue[0]}")
+
+
+def sales_per_branch():
+    query = """
+    SELECT b.name, COUNT(s.id) 
+    FROM sales s
+    JOIN cars c ON s.cars_id = c.id
+    JOIN branches b ON c.branches_id = b.id
+    GROUP BY b.name;
+    """
+    sales = execute_query(query, fetch="all")
+
+    if sales:
+        print("\nSales per Branch:")
+        for branch, count in sales:
+            print(f"{branch}: {count} sales")
+    else:
+        print("No sales data found.")
+
+
+def sales_per_seller():
+    query = """
+    SELECT e.full_name, COUNT(s.id) 
+    FROM sales s
+    JOIN employees e ON s.customer_id = e.id
+    WHERE e.user_type = (SELECT id FROM user_type WHERE name = 'Seller')
+    GROUP BY e.full_name;
+    """
+    sales = execute_query(query, fetch="all")
+
+    if sales:
+        print("\nSales per Seller:")
+        for seller, count in sales:
+            print(f"{seller}: {count} sales")
+    else:
+        print("No sales data found.")
