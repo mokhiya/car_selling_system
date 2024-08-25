@@ -2,6 +2,7 @@ from superadmin.database import (create_database,
                                  add_update_or_delete_manager, see_all_managers,
                                  total_sales, total_revenue, sales_per_branch, sales_per_seller)
 from client.registerclient import register_client
+from configs.db_settings import execute_query
 
 
 def check_login(login, password):
@@ -11,6 +12,53 @@ def check_login(login, password):
     if login == super_admin_login and password == super_admin_password:
         print("Login successful")
         return show_super_admin_menu()
+
+    employee_query = """
+    SELECT e.user_type, u.name, e.is_active
+    FROM employees e
+    JOIN user_type u ON e.user_type = u.id
+    WHERE e.login = %s AND e.password = %s;
+    """
+
+    employee = execute_query(employee_query, params=(login, password), fetch="one")
+
+    if employee:
+        user_type, user_role, is_active = employee
+
+        if not is_active:
+            update_query = "UPDATE employees SET is_active = TRUE WHERE login = %s;"
+            execute_query(update_query, params=(login,))
+            print(f"{user_role} login successful and status updated.")
+
+        # Redirect to the appropriate menu based on the user role
+        if user_role == 'Manager':
+            return branch_manager_menu()
+        elif user_role == 'Seller':
+            return seller_menu()
+        else:
+            print("Unknown user type.")
+            return
+
+    client_query = """
+    SELECT is_active
+    FROM customers
+    WHERE login = %s AND password = %s;
+    """
+
+    client = execute_query(client_query, params=(login, password), fetch="one")
+
+    if client:
+        is_active = client[0]
+
+        if not is_active:
+            # Update the status to True if the client is inactive
+            update_query = "UPDATE customers SET is_active = TRUE WHERE login = %s;"
+            execute_query(update_query, params=(login,))
+            print("Client login successful and status updated.")
+
+        return client_query
+
+    print("Invalid login or password. Please try again.")
 
 
 def main_menu():
@@ -29,6 +77,7 @@ def main_menu():
             if register_client():
                 return client_menu()
         elif choice == "3":
+            print("Thank you using for our service!")
             break
         else:
             print("Invalid choice, please try again.")
