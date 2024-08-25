@@ -4,6 +4,9 @@ from datetime import datetime
 
 
 def view_available_cars():
+    """
+    Fetch and display available cars from the database.
+    """
     query = '''
     SELECT
         c.id,
@@ -42,6 +45,9 @@ def view_available_cars():
 
 
 def buy_car():
+    """
+    Handle the car purchase process, allowing users to choose payment options.
+    """
     view_available_cars()
     try:
         car_id = int(input("Enter the ID of the car you want to purchase: "))
@@ -100,7 +106,6 @@ def buy_car():
             print("Invalid option selected.")
             return
 
-        # Insert purchase record into purchases table
         insert_query = '''
         INSERT INTO purchases (
             car_id,
@@ -134,6 +139,9 @@ def buy_car():
 
 
 def view_purchase_history():
+    """
+    Display the purchase history from the purchases table.
+    """
     query = '''
     SELECT
         id,
@@ -171,23 +179,22 @@ def view_purchase_history():
             print("-" * 100)
 
 
-def main_menu():
+def buy_car_menu():
+    """
+    Show the buy car menu and handle user choices.
+    """
     while True:
-        print("\n==== Car Selling System ====")
-        print("1. View Available Cars")
-        print("2. Buy a Car")
-        print("3. View Purchase History")
-        print("4. Exit")
-        choice = input("Enter your choice: ")
+        print("\nBuy a Car Menu:")
+        print("1. View available cars")
+        print("2. Purchase a car (full or credit)")
+        print("3. Back to Client Menu")
+        choice = input("Select an option: ")
 
-        if choice == '1':
+        if choice == "1":
             view_available_cars()
-        elif choice == '2':
+        elif choice == "2":
             buy_car()
-        elif choice == '3':
-            view_purchase_history()
-        elif choice == '4':
-            print("Thank you for using the Car Selling System. Goodbye!")
+        elif choice == "3":
             break
         else:
-            print("Invalid choice. Please try again.")
+            print("Invalid choice, please try again.")
