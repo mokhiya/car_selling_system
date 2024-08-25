@@ -79,3 +79,53 @@ def create_database():
 
     execute_query(query)
     print("Database created successfully")
+
+
+def add_update_or_delete_manager():
+    action = input("Would you like to add, update, or delete a manager? (add/update/delete): ").strip().lower()
+
+    if action == "add":
+        login = input("Enter manager's login: ")
+        password = input("Enter manager's password: ")
+        full_name = input("Enter manager's full name: ")
+        email = input("Enter manager's email: ")
+        branches_id = input("Enter the branch ID: ")
+
+        query = """
+        INSERT INTO employees (login, password, full_name, email, user_type, is_active, branches_id)
+        VALUES (%s, %s, %s, %s, (SELECT id FROM user_type WHERE name = 'Manager'), TRUE, %s);
+        """
+        params = (login, password, full_name, email, branches_id)
+        execute_query(query, params)
+        print("Manager added successfully.")
+
+    elif action == "update":
+        manager_id = input("Enter the manager's ID to update: ")
+        update_field = input(
+            "What would you like to update? (login/password/full_name/email/branches_id): ").strip().lower()
+        new_value = input(f"Enter new value for {update_field}: ")
+
+        query = f"""
+        UPDATE employees 
+        SET {update_field} = %s 
+        WHERE id = %s AND user_type = (SELECT id FROM user_type WHERE name = 'Manager');
+        """
+        params = (new_value, manager_id)
+        execute_query(query, params)
+        print("Manager updated successfully.")
+
+    elif action == "delete":
+        manager_id = input("Enter the manager's ID to delete: ")
+
+        query = """
+        DELETE FROM employees 
+        WHERE id = %s AND user_type = (SELECT id FROM user_type WHERE name = 'Manager');
+        """
+        params = (manager_id,)
+        execute_query(query, params)
+        print("Manager deleted successfully.")
+
+    else:
+        print("Invalid action. Please choose 'add', 'update', or 'delete'.")
+        add_update_or_delete_manager()
+
