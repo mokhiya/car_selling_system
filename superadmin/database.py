@@ -24,8 +24,6 @@ def create_database():
         user_type BIGINT,
         is_active BOOLEAN DEFAULT FALSE,
         branches_id BIGINT,
-        vin VARCHAR(50) NOT NULL UNIQUE ,
-        status VARCHAR(50),
         FOREIGN KEY (user_type) REFERENCES user_type(id),
         FOREIGN KEY (branches_id) REFERENCES branches(id)
     ),
@@ -50,6 +48,8 @@ def create_database():
         year INT,
         price DECIMAL,
         branches_id BIGINT,
+        vin VARCHAR(50) NOT NULL UNIQUE ,
+        status VARCHAR(50),
         FOREIGN KEY (brands_id) REFERENCES brands(id),
         FOREIGN KEY (colors_id) REFERENCES colors(id),
         FOREIGN KEY (branches_id) REFERENCES branches(id)
