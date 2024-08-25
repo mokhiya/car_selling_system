@@ -1,7 +1,7 @@
 from superadmin.database import (create_database,
                                  add_update_or_delete_manager, see_all_managers,
                                  total_sales, total_revenue, sales_per_branch, sales_per_seller)
-from seller.seller import (sell_car_menu, view_available_cars, view_sales_history)
+from seller.seller import (view_available_cars, view_sales_history, sell_car_to_client, process_payment)
 from client.client import (view_available_cars, view_purchase_history, buy_car)
 from client.registerclient import register_client
 from configs.db_settings import execute_query
@@ -259,8 +259,27 @@ def seller_menu(branch_id):
         else:
             print("Invalid choice. Please try again.")
 
+def sell_car_menu(branch_id):
+    """
+    Main menu for selling a car and processing payment.
+    """
+    while True:
+        print("\nSell a Car:")
+        print("1. Sell a car to a client")
+        print("2. Back to Seller Menu")
+        choice = input("Select an option: ")
 
+        if choice == "1":
+            selected_car = sell_car_to_client(branch_id)
+            if selected_car:
+                process_payment(selected_car, branch_id)
+                choice= input("Choose payment method (full or credit):")
+        elif choice == "2":
+            seller_menu()
+        else:
+            print("Invalid choice, please try again.")
 
+        
 def client_menu():
     """
     This function shows the main menu of the client menu.
@@ -289,7 +308,7 @@ def buy_car_menu():
     while True:
         print("\nBuy a Car:")
         print("1. View available cars")
-        print("2. Purchase a car (full or credit)")
+        print("2. Buy car")
         print("3. Back to Main Menu")
         choice = input("Select an option: ")
 
@@ -301,3 +320,6 @@ def buy_car_menu():
             main_menu()
         else:
             print("Invalid choice, please try again.")
+
+if __name__ == '__main__':
+    main_menu
