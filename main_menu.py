@@ -173,31 +173,7 @@ def manage_cars_menu():
             break
         else:
             print("Invalid choice, please try again.")
-
-
-def seller_menu():
-    """
-    This function shows the main menu of the seller menu.
-    """
-    while True:
-        print("\nSeller Menu:")
-        print("1. Sell a Car")
-        print("2. View sales history")
-        print("3. View Available Cars")
-        print("4. Back to Main Menu")
-        choice = input("Select an option: ")
-
-        if choice == "1":
-            sell_car()
-        elif choice == "2":
-            pass
-        elif choice == "3":
-            pass
-        elif choice == "4":
-            break
-        else:
-            print("Invalid choice, please try again.")
-
+            
 
 def sell_car():
     """
@@ -218,28 +194,7 @@ def sell_car():
             break
         else:
             print("Invalid choice, please try again.")
-
-
-def client_menu():
-    """
-    This function shows the main menu of the client menu.
-    """
-    while True:
-        print("\nClient Menu:")
-        print("1. Buy a Car")
-        print("2. View Purchase History")
-        print("3. Back to Main Menu")
-        choice = input("Select an option: ")
-
-        if choice == "1":
-            buy_car_menu()
-        elif choice == "2":
-            pass
-        elif choice == "3":
-            break
-        else:
-            print("Invalid choice, please try again.")
-
+            
 
 def buy_car_menu():
     """
