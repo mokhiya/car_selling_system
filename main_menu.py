@@ -3,6 +3,15 @@ from superadmin.database import (create_database,
                                  total_sales, total_revenue, sales_per_branch, sales_per_seller)
 
 
+def check_login(login, password):
+    super_admin_login = "super"
+    super_admin_password = "super"
+
+    if login == super_admin_login and password == super_admin_password:
+        print("Login successful")
+        return show_super_admin_menu()
+
+
 def main_menu():
     while True:
         print("\nMain Menu:")
@@ -12,7 +21,9 @@ def main_menu():
         choice = input("Select an option: ")
 
         if choice == "1":
-            pass
+            login = input("Login: ")
+            password = input("Password: ")
+            check_login(login, password)
         elif choice == "2":
             pass
         elif choice == "3":
@@ -40,9 +51,10 @@ def show_super_admin_menu():
         if show_manger_management_menu():
             return show_super_admin_menu()
     elif text == "3":
-        pass
+        if show_statistics_menu():
+            return show_super_admin_menu()
     elif text == "4":
-        pass
+        return main_menu()
     else:
         print("Invalid input")
         show_super_admin_menu()
