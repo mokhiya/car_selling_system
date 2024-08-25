@@ -38,10 +38,19 @@ def update_car_details():
     update(car_id, fields[choice - 1], new_value)
 
 
-def update(seller_id, field, new_value):
-    query = f"""UPDATE employees SET {field} = %s
-            WHERE id = %s AND user_type = (SELECT id FROM user_type WHERE name = 'Seller');
-            """
-    params = (new_value, seller_id)
+def update(car_id, field, new_value):
+    query = f"UPDATE cars SET {field} = %s WHERE id = %s);"
+    params = (new_value, car_id)
+
     execute_query(query, params)
-    print("Seller updated successfully.")
+    print("Car updated successfully.")
+
+
+def delete_car():
+    car_id = int(input("Enter ID of the car to delete: "))
+
+    query = "DELETE FROM cars WHERE id = %s;"
+    params = (car_id,)
+
+    execute_query(query, params)
+    print("Car deleted successfully.")
