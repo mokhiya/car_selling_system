@@ -296,10 +296,9 @@ def client_menu():
         choice = input("Select an option: ")
 
         if choice == "1":
-            if buy_car_menu():
-                return client_menu
+            buy_car_menu()
         elif choice == "2":
-            view_purchase_history
+            view_purchase_history()
         elif choice == "3":
             main_menu()
         else:
