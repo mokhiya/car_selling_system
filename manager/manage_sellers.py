@@ -24,7 +24,10 @@ def update_seller_account():
     print_enumerate(fields)
 
     choice = int(input("What would you like to update? Enter your choice:  "))
-    new_value = input(f"Enter new value for {fields[choice - 1]}:  ")
+    if choice == 5:
+        new_value = int(input(f"Enter new value for {fields[choice - 1]}:  "))
+    else:
+        new_value = input(f"Enter new value for {fields[choice - 1]}:  ")
 
     update(seller_id, fields[choice - 1], new_value)
 
