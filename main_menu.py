@@ -149,13 +149,17 @@ def show_statistics_menu():
     Choose an option above: """)
 
     if text == "1":
-        total_sales()
+        if total_sales():
+            return show_statistics_menu()
     elif text == "2":
-        total_revenue()
+        if total_revenue():
+            return show_statistics_menu()
     elif text == "3":
-        sales_per_branch()
+        if sales_per_branch():
+            return show_statistics_menu()
     elif text == "4":
-        sales_per_seller()
+        if sales_per_seller():
+            return show_statistics_menu()
     elif text == "5":
         return show_super_admin_menu()
     else:
@@ -179,7 +183,7 @@ def branch_manager_menu():
         elif choice == "2":
             manage_cars_menu()
         elif choice == "3":
-            main_menu()
+            return main_menu()
         else:
             print("Invalid choice, please try again.")
 
