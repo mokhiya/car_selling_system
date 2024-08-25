@@ -54,3 +54,11 @@ def delete_car():
 
     execute_query(query, params)
     print("Car deleted successfully.")
+
+
+def view_available_cars_in_branch():
+    branch_id = int(input("Enter ID of the branch:  "))
+    query = "SELECT * FROM cars WHERE branches_id = %s;"
+    params = (branch_id,)
+
+    execute_query(query, params, 'all')
