@@ -58,7 +58,12 @@ def delete_car():
 
 def view_available_cars_in_branch():
     branch_id = int(input("Enter ID of the branch:  "))
-    query = "SELECT * FROM cars WHERE branches_id = %s;"
+    query = "SELECT id, model, year, price FROM cars WHERE branches_id = %s;"
     params = (branch_id,)
 
-    execute_query(query, params, 'all')
+    cars = execute_query(query, params, 'all')
+
+    if not cars:
+        print("No cars available.")
+    else:
+        print_enumerate(cars)

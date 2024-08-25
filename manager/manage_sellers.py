@@ -56,7 +56,12 @@ def delete_seller_account():
 def view_all_sellers_in_branch():
     branch_id = int(input("Enter ID of the branch:  "))
 
-    query = """SELECT * FROM employees WHERE branches_id = %s AND 
+    query = """SELECT full_name, email, is_active FROM employees WHERE branches_id = %s AND 
             user_type = (SELECT id FROM user_type WHERE name = 'Seller');"""
     params = (branch_id,)
-    execute_query(query, params, 'all')
+    sellers = execute_query(query, params, 'all')
+
+    if not sellers:
+        print("No cars available.")
+    else:
+        print_enumerate(sellers)
