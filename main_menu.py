@@ -5,6 +5,8 @@ from seller.seller import (view_available_cars, view_sales_history, sell_car_to_
 from client.client import (view_available_cars, view_purchase_history, buy_car)
 from client.registerclient import register_client
 from configs.db_settings import execute_query
+from manager.manage_sellers import (create_seller_account, update_seller_account,
+                                    delete_seller_account, view_all_sellers_in_branch)
 
 
 def check_login(login, password):
@@ -175,7 +177,7 @@ def branch_manager_menu():
         print("\nBranch Manager Menu:")
         print("1. Manage Sellers")
         print("2. Manage Cars")
-        print("3. Back to Main Menu")
+        print("3. Go to back")
         choice = input("Select an option: ")
 
         if choice == "1":
@@ -198,19 +200,19 @@ def manage_sellers_menu():
         print("2. Update seller account")
         print("3. Delete seller account")
         print("4. View all sellers in branch")
-        print("5. Back to Branch Manager Menu")
+        print("5. Go to back")
         choice = input("Select an option: ")
 
         if choice == "1":
-            pass
+            create_seller_account()
         elif choice == "2":
-            pass
+            update_seller_account()
         elif choice == "3":
-            pass
+            delete_seller_account()
         elif choice == "4":
-            pass
+            view_all_sellers_in_branch()
         elif choice == "5":
-            break
+            branch_manager_menu()
         else:
             print("Invalid choice, please try again.")
 
@@ -225,7 +227,7 @@ def manage_cars_menu():
         print("2. Update car details")
         print("3. Delete car")
         print("4. View available cars in branch")
-        print("5. Back to Branch Manager Menu")
+        print("5. Go to back")
         choice = input("Select an option: ")
 
         if choice == "1":
