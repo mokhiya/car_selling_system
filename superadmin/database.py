@@ -129,3 +129,26 @@ def add_update_or_delete_manager():
         print("Invalid action. Please choose 'add', 'update', or 'delete'.")
         add_update_or_delete_manager()
 
+
+def see_all_managers():
+    query = """
+    SELECT e.id, e.login, e.full_name, e.email, b.name AS branch_name
+    FROM employees e
+    JOIN branches b ON e.branches_id = b.id
+    WHERE e.user_type = (SELECT id FROM user_type WHERE name = 'Manager');
+    """
+
+    try:
+        managers = execute_query(query, fetch="all")
+
+        if managers:
+            print("\nList of Managers:")
+            print("ID | Login | Full Name | Email | Branch")
+            print("-" * 50)
+            for manager in managers:
+                print(f"{manager[0]} | {manager[1]} | {manager[2]} | {manager[3]} | {manager[4]}")
+        else:
+            print("No managers found.")
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
