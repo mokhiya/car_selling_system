@@ -1,6 +1,7 @@
 from superadmin.database import (create_database,
                                  add_update_or_delete_manager, see_all_managers,
                                  total_sales, total_revenue, sales_per_branch, sales_per_seller)
+from client.registerclient import register_client
 
 
 def check_login(login, password):
@@ -15,7 +16,7 @@ def check_login(login, password):
 def main_menu():
     while True:
         print("\nMain Menu:")
-        print("1. Register")
+        print("1. Register (for new clients only)")
         print("2. Login")
         print("3. Exit")
         choice = input("Select an option: ")
@@ -25,7 +26,8 @@ def main_menu():
             password = input("Password: ")
             check_login(login, password)
         elif choice == "2":
-            pass
+            if register_client():
+                return client_menu()
         elif choice == "3":
             break
         else:
