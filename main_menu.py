@@ -1,13 +1,11 @@
 from superadmin.database import (create_database,
                                  add_update_or_delete_manager, see_all_managers,
                                  total_sales, total_revenue, sales_per_branch, sales_per_seller)
-<<<<<<< HEAD
 from seller.seller import (sell_car_menu, view_available_cars, view_sales_history)
-=======
+from client.client import (view_available_cars, view_purchase_history, buy_car)
 from client.registerclient import register_client
 from configs.db_settings import execute_query
 
->>>>>>> e355a54919547978bd6d0f521f18be9f8b494c45
 
 def check_login(login, password):
     super_admin_login = "super"
@@ -34,7 +32,6 @@ def check_login(login, password):
             execute_query(update_query, params=(login,))
             print(f"{user_role} login successful and status updated.")
 
-        # Redirect to the appropriate menu based on the user role
         if user_role == 'Manager':
             return branch_manager_menu()
         elif user_role == 'Seller':
@@ -55,7 +52,6 @@ def check_login(login, password):
         is_active = client[0]
 
         if not is_active:
-            # Update the status to True if the client is inactive
             update_query = "UPDATE customers SET is_active = TRUE WHERE login = %s;"
             execute_query(update_query, params=(login,))
             print("Client login successful and status updated.")
@@ -183,7 +179,7 @@ def branch_manager_menu():
         elif choice == "2":
             manage_cars_menu()
         elif choice == "3":
-            break
+            main_menu()
         else:
             print("Invalid choice, please try again.")
 
@@ -277,35 +273,31 @@ def client_menu():
         choice = input("Select an option: ")
 
         if choice == "1":
-            buy_car_menu()
+            if buy_car_menu():
+                return client_menu
         elif choice == "2":
-            pass
+            view_purchase_history
         elif choice == "3":
-            break
+            main_menu()
         else:
             print("Invalid choice, please try again.")
 
-
 def buy_car_menu():
     """
-    This function shows the main menu of the sellers menu.
+    This function shows the main menu for buying a car.
     """
     while True:
         print("\nBuy a Car:")
         print("1. View available cars")
         print("2. Purchase a car (full or credit)")
-        print("3. Back to Client Menu")
+        print("3. Back to Main Menu")
         choice = input("Select an option: ")
 
         if choice == "1":
-            pass
+            view_available_cars()
         elif choice == "2":
-            pass
+            buy_car()
         elif choice == "3":
-            break
+            main_menu()
         else:
             print("Invalid choice, please try again.")
-
-
-if __name__ == "__main__":
-    main_menu()
