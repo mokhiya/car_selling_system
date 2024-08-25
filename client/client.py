@@ -4,6 +4,9 @@ from datetime import datetime
 
 
 def view_available_cars():
+    """
+    Fetch and display all available cars from the database.
+    """
     query = '''
     SELECT
         c.id,
@@ -40,8 +43,10 @@ def view_available_cars():
             print(f"Branch: {car[6]}")
             print("-" * 80)
 
-
 def buy_car():
+    """
+    Handles the purchase process for a car, including selecting payment option.
+    """
     view_available_cars()
     try:
         car_id = int(input("Enter the ID of the car you want to purchase: "))
@@ -100,7 +105,6 @@ def buy_car():
             print("Invalid option selected.")
             return
 
-        # Insert purchase record into purchases table
         insert_query = '''
         INSERT INTO purchases (
             car_id,
@@ -132,66 +136,53 @@ def buy_car():
     else:
         print("Car ID not found.")
 
-
 def view_purchase_history():
+    """
+    Fetch and display all purchase history from the database.
+    """
     query = '''
     SELECT
-        id,
-        car_name,
-        brand,
-        color,
-        year,
-        price,
-        branch,
-        payment_amount,
-        remaining_balance,
-        purchase_date
+        p.id,
+        p.car_id,
+        c.name AS car_name,
+        b.name AS brand,
+        cl.name AS color,
+        p.year,
+        p.price,
+        br.name AS branch,
+        p.payment_amount,
+        p.remaining_balance,
+        p.purchase_date
     FROM
-        purchases
+        purchases p
+    JOIN
+        cars c ON p.car_id = c.id
+    JOIN
+        brands b ON c.brands_id = b.id
+    JOIN
+        colors cl ON c.colors_id = cl.id
+    JOIN
+        branches br ON c.branches_id = br.id
     ORDER BY
-        purchase_date DESC
+        p.purchase_date DESC
     '''
-    records = execute_query(query, fetch='all')
-    if not records:
+    purchases = execute_query(query, fetch='all')
+    if not purchases:
         print("\nNo purchase history found.\n")
     else:
         print("\nPurchase History:")
-        print("-" * 100)
-        for record in records:
-            print(f"Purchase ID: {record[0]}")
-            print(f"Car Name: {record[1]}")
-            print(f"Brand: {record[2]}")
-            print(f"Color: {record[3]}")
-            print(f"Year: {record[4]}")
-            print(f"Price: ${record[5]:,.2f}")
-            print(f"Branch: {record[6]}")
-            print(f"Payment Amount: ${record[7]:,.2f}")
-            print(f"Remaining Balance: ${record[8]:,.2f}")
-            print(f"Purchase Date: {record[9].strftime('%Y-%m-%d %H:%M:%S')}")
-            print("-" * 100)
+        print("-" * 120)
+        for purchase in purchases:
+            print(f"Purchase ID: {purchase[0]}")
+            print(f"Car ID: {purchase[1]}")
+            print(f"Car Name: {purchase[2]}")
+            print(f"Brand: {purchase[3]}")
+            print(f"Color: {purchase[4]}")
+            print(f"Year: {purchase[5]}")
+            print(f"Price: ${purchase[6]:,.2f}")
+            print(f"Branch: {purchase[7]}")
+            print(f"Payment Amount: ${purchase[8]:,.2f}")
+            print(f"Remaining Balance: ${purchase[9]:,.2f}")
+            print(f"Purchase Date: {purchase[10]}")
+            print("-" * 120)
 
-
-def main_menu():
-    while True:
-        print("\n==== Car Selling System ====")
-        print("1. View Available Cars")
-        print("2. Buy a Car")
-        print("3. View Purchase History")
-        print("4. Exit")
-        choice = input("Enter your choice: ")
-
-        if choice == '1':
-            view_available_cars()
-        elif choice == '2':
-            buy_car()
-        elif choice == '3':
-            view_purchase_history()
-        elif choice == '4':
-            print("Thank you for using the Car Selling System. Goodbye!")
-            break
-        else:
-            print("Invalid choice. Please try again.")
-
-
-if __name__ == "__main__":
-    main_menu()
