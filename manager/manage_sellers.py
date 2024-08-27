@@ -2,6 +2,13 @@ from configs.db_settings import execute_query
 from common import print_enumerate
 
 def create_seller_account():
+    """
+    Create a new seller account in the database.
+
+    This function inserts a new record into the 'employees' table with the provided
+    seller details. The new seller is assigned a user type of 'seller' and is marked
+    as active by default.
+    """
     login = input("Enter seller's login: ")
     password = input("Enter seller's password: ")
     full_name = input("Enter seller's full name: ")
@@ -18,6 +25,12 @@ def create_seller_account():
 
 
 def update_seller_account():
+    """
+    Update the details of an existing seller account in the database.
+
+    This function prompts the user to enter the seller's ID and select which field
+    (login, password, full name, email, or branch ID) they would like to update.
+    """
     seller_id = int(input("Enter the seller's ID to update: "))
 
     fields = ['login', 'password', 'full_name', 'email', 'branches_id']
@@ -33,6 +46,13 @@ def update_seller_account():
 
 
 def update(seller_id, field, new_value):
+    """
+    Update a specific field of a seller account in the database.
+    :param seller_id:
+    :param field:
+    :param new_value:
+    :return:
+    """
     query = f"""UPDATE employees SET {field} = %s
             WHERE id = %s AND user_type = (SELECT id FROM user_type WHERE name = 'Seller');
             """
@@ -42,6 +62,13 @@ def update(seller_id, field, new_value):
 
 
 def delete_seller_account():
+    """
+    Delete an existing seller account from the database.
+
+    This function prompts the user to enter the seller's ID and executes an SQL DELETE
+    statement to remove the seller account from the 'employees' table.
+    :return:
+    """
     seller_id = int(input("Enter the seller's ID to delete: "))
 
     query = """
@@ -54,6 +81,10 @@ def delete_seller_account():
 
 
 def view_all_sellers_in_branch():
+    """
+    Retrieve and display all sellers associated with a specific branch.
+    :return:
+    """
     branch_id = int(input("Enter ID of the branch:  "))
 
     query = """SELECT full_name, email, is_active FROM employees WHERE branches_id = %s AND 

@@ -5,6 +5,9 @@ from common import print_enumerate
 
 
 def add_new_car():
+    """
+    This function creates a new car and inserts a new record into the 'cars' table.
+    """
     model = input("Enter name of the car: ")
     brands_id = int(input("Enter brand_id of the car:  "))
     colors_id = int(input("Enter color_id of the car:  "))
@@ -22,6 +25,10 @@ def add_new_car():
 
 
 def update_car_details():
+    """
+    Update the details of an existing car data in the database.
+    :return:
+    """
     car_id = int(input("Enter ID of the car to update: "))
 
     fields = ['model', 'brands_id', 'colors_id', 'year', 'price', 'branches_id', 'vin']
@@ -39,6 +46,13 @@ def update_car_details():
 
 
 def update(car_id, field, new_value):
+    """
+    Update a specific field of a car in the database.
+    :param car_id:
+    :param field:
+    :param new_value:
+    :return:
+    """
     query = f"UPDATE cars SET {field} = %s WHERE id = %s);"
     params = (new_value, car_id)
 
@@ -47,6 +61,10 @@ def update(car_id, field, new_value):
 
 
 def delete_car():
+    """
+    Delete an existing seller account from the database.
+    :return:
+    """
     car_id = int(input("Enter ID of the car to delete: "))
 
     query = "DELETE FROM cars WHERE id = %s;"
@@ -57,6 +75,10 @@ def delete_car():
 
 
 def view_available_cars_in_branch():
+    """
+    Retrieve and display all available cars associated with a specific branch.
+    :return:
+    """
     branch_id = int(input("Enter ID of the branch:  "))
     query = "SELECT id, model, year, price FROM cars WHERE branches_id = %s;"
     params = (branch_id,)
