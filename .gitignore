@@ -1,0 +1,29 @@
+# Python compiled files
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+env/
+
+# Environment variables
+.env
+
+# Pytest cache
+.cache/
+
+# IDE configuration files
+.idea/
+
+# Logs
+*.log
+logs/
+
+# Byte-compiled and cached Python files
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore additional client dependencies (if relevant, like Node.js)
+client/node_modules/
+client/dist/
